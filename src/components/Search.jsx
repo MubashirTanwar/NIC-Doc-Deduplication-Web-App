@@ -1,12 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-const data =
-  "महाकोशल, कर्नाटक, आंध्र, तामिळनाडू, केरळ यांचे प्रतिनिधित्व करीत होते. १३ डिसेंबर १९४८ रोजी या कमिशनचा रिपोर्ट सादर झाला. १,००० लेखी निवेदने या कमिशनकडे आली होती आणि त्यांनी ७०० साक्षीदारांच्या मुलाखती घेतल्या होत्या. भाषावर प्रांत रचनेच्या बाजूने असणारी मंडळी या कमिशनच्या रिपोर्टमुळे मोठ्या प्रमाणात खवळली. कारण, भाषेच्या पायावर किंवा प्रामुख्याने भाषेचा विचार करून प्रांत रचना करणे हे देशाच्या व्यापक हितात बसणारे नाही आणि त्यामुळे त्या आधारावर काही कार्यवाही करू नये असा अहवाल या कमिशनने दिला होता. या अहवालामुळे काँग्रेस पक्षात जो असंतोष तयार झाला त्यामुळे जयपूरला झालेल्या अधिवेशनात भाषावर प्रांत रचनेच्या मागणीचा फेरविचार करण्यासाठी एक उप-समिती नेमण्यात आली. यात पंडित जवाहरलाल नेहरू, वल्लभभाई पटेल आणि काँग्रेसचे तत्कालीन अध्यक्ष पट्टाभी सीतारामय्या अजा तीन वजनदार व्यक्तींचा समावेश होता. या उप-समितीचा रिपोर्ट ६ एप्रिल १९४९ रोजी प्रसारित करण्यात आला. या अहवालात भाषावर प्रांत रचनेचा प्रयत्न केल्यास जे दूरगामी परिणाम होतील त्याविरुद्ध इशारा दिला गेला होता. मद्रास शहराची मागणी सोडून देण्याच्या अटीवर या समितीने आंध्र प्रदेशाचे राज्य निर्माण होण्यासाठीची मागणी मान्य करणारा विचार मांडला होता. पण इतर सर्व मागण्या फेटाळून लावल्या होत्या. भाषावर प्रांत रचनेचा प्रश्‍न यामुळे तीव्रच बनत गेला. आंध्र प्रदेशच्या मागणीसाठी स्वामी सीताराम या प्रसिद्ध गांधीवादी नेत्याने ३५ दिवसांचे आमरण उपोषण केले आणि विनोबा भावेंच्या आग्रहाखातर सोडले. पण त्या पाठोपाठ एक वर्षाने दुसरे गांधीवादी नेते पोट्टी श्रीरामुळू यांनी आमरण उपोषण सुरू केले. त्यांच्या ५८ दिवसांच्या उपोषणाच्या शेवटी १५ डिसेंबर १९५२ रोजी त्यांचा उपोषणातच मृत्यू झाला. यामुळे आंध्र प्रदेश मुलखात मोठ्या प्रमाणात अभूतपूर्व असे हिंसक आंदोलन";
-function Search() {
+function Search({texts, searchResults}) {
+  const data = texts;
   const copyToClipboard = () => {
     navigator.clipboard.writeText(data);
   };
+  
+  console.log(searchResults)
   const [search, setSearch] = useState(false);
   return (
     <div className="flex justify-center flex-col items-center p-8 ">
@@ -48,28 +49,24 @@ function Search() {
       </div>
       <hr />
       <hr class="h-px w-full my-8 bg-gray-200 border-0 dark:bg-gray-700" />
-    {search && 
+    {searchResults && 
           <a
           href="#"
           class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 "
         >
           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">
-            Document Found!!
+           {searchResults.message}
           </h5>
           <p class="font-normal text-gray-700 ">
-            A similar document found in the database. <br />
+          View Document <br />
             <a
               href="#"
               class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
             >
-              View Document
+              {searchResults.location}
             </a>
           </p>
-          <ul>
-              <li>Date Uploaded: 12th October 2023</li>
-              <li>By: John Doe</li>
-              <li>Match Percentage: 93%</li>
-          </ul>
+   
   
         </a>
     }

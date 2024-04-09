@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -14,6 +14,15 @@ const steps = ['Upload a PDF', 'Extracted Pages',  'Extracted Texts', 'Search Fo
 export default function HorizontalLinearStepper() {
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
+  const [pdf, setPdf] = useState(null);
+  const [images, setImages] = useState([]);
+  const [texts, setTexts] = useState([]);
+  const [searchResults, setSearchResults] = useState({});
+
+
+  //make a post rq to the backend to upload the pdf
+  //get the response and display the images
+  // http://127.0.0.1:8000/api/text/
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -56,6 +65,41 @@ export default function HorizontalLinearStepper() {
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  const getText = async (pdf) => {
+    const formData = new FormData();
+    formData.append('pdf', pdf);
+    const response = await fetch('http://127.0.0.1:8000/api/ocr/', 
+    {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await response.json();
+    console.log(data)
+    setTexts(data.extracted_text);
+  }
+
+  const getElasticSearch = async (pdf) => {
+    const formData = new FormData();
+    formData.append('pdf', pdf);
+    const response = await fetch('http://127.0.0.1:8000/api/es/',
+    {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await response.json();
+
+    setSearchResults(data[0]);
+    console.log(searchResults)
+  }
+
+  useEffect(() => {
+    if(pdf) {
+  getText(pdf);
+  getElasticSearch(pdf);
+    }
+}, [pdf]);
+
 
   return (
     <div className='w-full lg:w-[1200px] items-center align-middle justify-center m-auto  my-4'>
@@ -107,10 +151,10 @@ export default function HorizontalLinearStepper() {
       ) : (
         <>
 
-          {activeStep === 0 ? <App/> : null}
-          {activeStep === 1 ? <FeaturedImageGallery/> : null}
-            {activeStep === 2 ? <ExtractedText/> : null}
-          {activeStep === 3 ? <Search/> : null}
+          {activeStep === 0 ? <App activeStep={activeStep} setActiveStep={setActiveStep} setPdf= {setPdf} setImages={setImages} pdf={pdf}/> : null}
+          {activeStep === 1 ? <FeaturedImageGallery images={images}/> : null}
+            {activeStep === 2 ? <ExtractedText pdf={pdf} texts= {texts}/> : null}
+          {activeStep === 3 ? <Search texts= {texts} searchResults={searchResults}/> : null}
         </>
       )}
     </Box>
